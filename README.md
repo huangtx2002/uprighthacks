@@ -1009,12 +1009,6 @@ We welcome contributions! Here are some areas where you can help:
 
 ---
 
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🙏 Acknowledgments
 
 - **DeltaHacks 12** for the opportunity to build this project
@@ -1022,16 +1016,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Arduino Community** for extensive sensor libraries
 - **Grove** for reliable accelerometer hardware
 - **Apple** for SwiftUI & SceneKit frameworks
-
----
-
-## 📞 Contact
-
-Built with ❤️ for DeltaHacks 12
-
-**Team Members:** [Your names here]
-
-**Questions?** Open an issue or reach out!
 
 ---
 
