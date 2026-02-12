@@ -1,0 +1,12 @@
+# runtime logs / telemetry
+telemetry.ndjson
+*.ndjson
+*.log
+
+# dependencies
+node_modules/
+
+# env + local config
+.env
+.env.*
+Gemini-Integration-Key.env

@@ -1,0 +1,165 @@
+# Upright Project .gitignore
+
+# ====================
+# Environment & Secrets
+# ====================
+*.env
+.env
+.env.*
+backend/Gemini-Integration-Key.env
+**/secrets/
+**/*.pem
+**/*.key
+
+# ====================
+# Node.js / Backend
+# ====================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.npm
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# ====================
+# Telemetry Data Logs
+# ====================
+*.ndjson
+telemetry*.ndjson
+backend/telemetry.ndjson
+backend/telemetry2.ndjson
+logs/
+*.log
+
+# ====================
+# macOS
+# ====================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# ====================
+# Xcode / Swift
+# ====================
+# Build artifacts
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+
+# User-specific files
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+**/xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserdata
+*.xcscmblueprint
+*.xcscheme
+!xcshareddata/xcschemes/*.xcscheme
+
+# Swift Package Manager
+.swiftpm/
+.build/
+*.swiftpm/xcode/xcuserdata/
+*.swiftpm/xcode/xcshareddata/
+Packages/
+Package.pins
+Package.resolved
+.swiftpm-*
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+.playground
+
+# DerivedData
+DerivedData/
+
+# ====================
+# Arduino
+# ====================
+*.hex
+*.elf
+*.eep
+*.lss
+*.map
+*.sym
+*.o
+*.a
+*.d
+
+# ====================
+# IDEs & Editors
+# ====================
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ====================
+# Testing & Coverage
+# ====================
+coverage/
+*.lcov
+.nyc_output/
+test-results/
+
+# ====================
+# Temporary Files
+# ====================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.cache
+tmp/
+temp/
+
+# ====================
+# OS-Specific
+# ====================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
