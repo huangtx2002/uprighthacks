@@ -2,7 +2,7 @@
 // Uses Three.js for 3D rendering and WebSocket for real-time data
 
 // Configuration
-const WS_URL = 'ws://localhost:8003'; // Change to your deployed URL
+const WS_URL = 'ws://159.89.112.149:8003'; // Server IP address
 const SLOUCH_THRESHOLD = 15; // degrees
 
 // State
