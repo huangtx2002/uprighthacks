@@ -8,8 +8,8 @@ final class TelemetryWebSocket {
     private var reconnectTimer: Timer?
     
     // For Swift Playgrounds on iPad/iPhone, replace "localhost" with your computer's IP address
-    // Example: "ws://192.168.1.100:8080"
-    private let baseURL = "ws://localhost:8080"
+    // Example: "ws://192.168.1.100:8003"
+    private let baseURL = "ws://localhost:8003"
 
     var onMessage: ((TelemetryMessage) -> Void)?
     var onConnectionChange: ((Bool) -> Void)?

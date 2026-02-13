@@ -6,12 +6,12 @@ const http = require("http");
 const PORT_NAME = process.argv[2]; // COM5 / COM8
 const BAUD = Number(process.argv[3] || 115200);
 const POST_HOST = process.argv[4] || "localhost";
-const POST_PORT = Number(process.argv[5] || 8080);
+const POST_PORT = Number(process.argv[5] || 8003);
 const POST_PATH = process.argv[6] || "/imu";
 
 if (!PORT_NAME) {
     console.log("Usage: node serial-bridge.js <COM_PORT> [BAUD] [HOST] [PORT] [PATH]");
-    console.log("Example: node serial-bridge.js COM5 115200 localhost 8080 /imu");
+    console.log("Example: node serial-bridge.js COM5 115200 localhost 8003 /imu");
     process.exit(1);
 }
 

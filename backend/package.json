@@ -5,7 +5,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "mock:sensor1": "node mock-sensor.js --sensor 1 --scenario realistic",
+    "mock:sensor2": "node mock-sensor.js --sensor 2 --scenario realistic",
+    "mock:good": "node mock-sensor.js --sensor 1 --scenario good",
+    "mock:bad": "node mock-sensor.js --sensor 1 --scenario bad",
+    "demo": "npm run mock:sensor1 & npm run mock:sensor2",
+    "test:demo": "node test-demo.js"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upright - Real-Time Posture Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .status-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .status-value {
+            font-size: 4rem;
+            font-weight: 900;
+            transition: all 0.3s ease;
+        }
+
+        .status-value.good {
+            color: #4ade80;
+        }
+
+        .status-value.bad {
+            color: #f87171;
+        }
+
+        .connection-status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .connection-status.connected {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .connection-status.disconnected {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .visualization-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #three-container {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .insight-card {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+        }
+
+        .insight-rating {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .insight-summary {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+
+        .insight-tip {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-style: italic;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .analyze-button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .analyze-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .analyze-button:active {
+            transform: translateY(0);
+        }
+
+        .analyze-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .analyze-status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧍 UPRIGHT</h1>
+            <p class="subtitle">Real-Time Posture Monitoring System</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Panel: Status & Metrics -->
+            <div class="panel status-panel">
+                <div class="connection-status" id="connection-status">
+                    ⚪ Connecting...
+                </div>
+
+                <div class="status-display">
+                    <div class="status-label">Posture Status</div>
+                    <div class="status-value" id="status-value">--</div>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">Upper Back</div>
+                        <div class="metric-value" id="upper-pitch">--°</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Lower Back</div>
+                        <div class="metric-value" id="lower-pitch">--°</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Difference</div>
+                        <div class="metric-value" id="pitch-diff">--°</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Samples</div>
+                        <div class="metric-value" id="sample-count">0</div>
+                    </div>
+                </div>
+
+                <button class="analyze-button" id="analyze-button" onclick="requestGeminiAnalysis()">
+                    🤖 Analyze My Posture Now
+                </button>
+                <div class="analyze-status" id="analyze-status"></div>
+
+                <div class="insight-card" id="insight-card" style="display: none;">
+                    <div class="insight-header">
+                        <span class="insight-icon" id="insight-icon">💡</span>
+                        <span class="insight-rating" id="insight-rating">--</span>
+                    </div>
+                    <div class="insight-summary" id="insight-summary">
+                        Waiting for AI analysis...
+                    </div>
+                    <div class="insight-tip" id="insight-tip">
+                        💡 Tip will appear here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: 3D Visualization -->
+            <div class="panel visualization-panel">
+                <div id="three-container">
+                    <div class="loading">Loading 3D model...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Built with ❤️ for DeltaHacks 12 | Your spine will thank you 🙌
+        </div>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.135.0/build/three.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

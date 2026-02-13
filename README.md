@@ -24,6 +24,22 @@
 - [Developer Guide](#developer-guide)
 - [Contributing](#contributing)
 
+## 🌐 Live Demo
+
+**Try it without hardware!** We've created a web-based demo that simulates sensor data:
+
+👉 **[Live Demo](http://your-domain.com)** (Deploy to see it in action!)
+
+The demo includes:
+- 🤖 Mock sensors generating realistic posture data
+- 🎨 Web-based 3D visualization (Three.js)
+- 🤖 Real AI insights from Google Gemini
+- 📊 Real-time WebSocket updates
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for deployment instructions.
+
+---
+
 ## 🎯 About
 
 ### The Problem
@@ -83,7 +99,7 @@ Software engineers, designers, and tech professionals who spend 8+ hours a day s
     │                                              │
     │  ┌────────────────┐  ┌──────────────────┐   │
     │  │ HTTP Endpoints │  │ WebSocket Server │   │
-    │  │  /imu, /imu2   │  │  (port 8080)     │   │
+    │  │  /imu, /imu2   │  │  (port 8003)     │   │
     │  │  /latest1/2    │  │                  │   │
     │  │  /history1/2   │  │  Real-time       │   │
     │  │  /insights/*   │  │  Broadcast       │   │
@@ -129,7 +145,7 @@ Software engineers, designers, and tech professionals who spend 8+ hours a day s
     │   Broadcasts insight via WebSocket           │
     └───────────┬──────────────────────────────────┘
                 │
-                │ WebSocket (ws://localhost:8080)
+                │ WebSocket (ws://localhost:8003)
                 ▼
     ┌──────────────────────────────────────────────┐
     │      Swift Frontend (SwiftUI + SceneKit)     │
@@ -187,6 +203,8 @@ Software engineers, designers, and tech professionals who spend 8+ hours a day s
 | **Dev Tools** | nodemon | 3.1.11 | Auto-restart on changes |
 
 ### Frontend Layer
+
+#### Native App (Swift)
 | Component | Technology | Purpose |
 |-----------|------------|---------|
 | **Language** | Swift | iOS/macOS app development |
@@ -194,6 +212,14 @@ Software engineers, designers, and tech professionals who spend 8+ hours a day s
 | **3D Graphics** | SceneKit | 3D model rendering & animation |
 | **Reactive** | Combine | Reactive data streams |
 | **Networking** | URLSession + WebSocket | Real-time data connection |
+
+#### Web App (Browser)
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Language** | JavaScript (ES6+) | Browser-based client |
+| **3D Graphics** | Three.js | WebGL 3D rendering |
+| **UI** | HTML5 + CSS3 | Responsive web interface |
+| **Networking** | WebSocket API | Real-time data connection |
 
 ### Data & Communication
 | Component | Technology | Purpose |
@@ -370,7 +396,7 @@ uprighthacks/
 │   │
 │   ├── 🟢 server.js                      # Main Express server
 │   │   ├─ HTTP endpoints (/imu, /imu2, /latest*, /history*, /insights/*)
-│   │   ├─ WebSocket server (port 8080)
+│   │   ├─ WebSocket server (port 8003)
 │   │   ├─ Window management (15s intervals)
 │   │   ├─ Feature extraction pipeline
 │   │   └─ Insight generation & broadcasting
@@ -397,6 +423,12 @@ uprighthacks/
 │   │   ├─ Compute slouch percentage
 │   │   └─ Alignment scoring
 │   │
+│   ├── 🤖 mock-sensor.js                 # ✨ NEW: Simulates Arduino sensors
+│   │   ├─ Generates realistic posture data
+│   │   ├─ Multiple scenarios (good, bad, realistic, etc.)
+│   │   ├─ Configurable sample rate
+│   │   └─ Perfect for demos without hardware
+│   │
 │   ├── 🧪 test-websocket.js              # WebSocket client test
 │   ├── 🧪 test-insights.js               # Insight generation test
 │   ├── 📄 TESTING.md                     # Testing documentation
@@ -404,8 +436,22 @@ uprighthacks/
 │   ├── 📜 telemetry.ndjson               # Sensor 1 data log (generated)
 │   └── 📜 telemetry2.ndjson              # Sensor 2 data log (generated)
 │
-└── 📱 frontend/                          # Swift frontend application
-    └── UpperTorso3D.swiftpm/             # Swift Playground package
+└── 📱 frontend/                          # Frontend applications
+    │
+    ├── web/                              # ✨ NEW: Web-based demo (no hardware needed)
+    │   ├── 📄 index.html                 # Main web page
+    │   │   ├─ Responsive design
+    │   │   ├─ Real-time status display
+    │   │   ├─ Metrics dashboard
+    │   │   └─ Insight cards
+    │   │
+    │   └── 📄 app.js                     # Frontend JavaScript
+    │       ├─ WebSocket client
+    │       ├─ Three.js 3D visualization
+    │       ├─ Real-time posture detection
+    │       └─ UI updates
+    │
+    └── UpperTorso3D.swiftpm/             # Native Swift app (for real hardware)
         ├── 📄 Package.swift              # Swift package manifest
         │
         ├── 🎨 MyApp.swift                # App entry point
@@ -424,7 +470,7 @@ uprighthacks/
         │   └─ Insight history management
         │
         ├── 🔌 TelemetryWebSocket.swift   # WebSocket client
-        │   ├─ Connects to ws://localhost:8080
+        │   ├─ Connects to ws://localhost:8003
         │   ├─ Auto-reconnection
         │   └─ Message parsing
         │
@@ -469,14 +515,28 @@ Generated Files (not in git):
 
 ## 🚀 Setup & Installation
 
+### Two Ways to Run Upright
+
+#### Option A: 🌐 **Web Demo** (No Hardware Required) ⭐ RECOMMENDED FOR DEMOS
+Perfect for trying out the system or showing it to others without physical sensors.
+
+#### Option B: 🔧 **Full Hardware Setup**
+For actual posture monitoring with real Arduino sensors.
+
+---
+
 ### Prerequisites
 
+#### For Web Demo:
 - **Node.js** 18+ ([Download](https://nodejs.org/))
+- **Google Gemini API Key** ([Get one](https://ai.google.dev/))
+- **Modern web browser** (Chrome, Firefox, Safari, Edge)
+
+#### For Hardware Setup (additional):
 - **Xcode** (for Swift frontend, macOS only)
 - **Arduino IDE** ([Download](https://www.arduino.cc/en/software))
 - **Grove MMA7660 Accelerometer** (×2)
 - **Arduino Uno** (×2)
-- **Google Gemini API Key** ([Get one](https://ai.google.dev/))
 
 ### 1️⃣ Clone the Repository
 
@@ -498,7 +558,7 @@ Create `backend/Gemini-Integration-Key.env`:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-1.5-flash
-PORT=8080
+PORT=8003
 ```
 
 #### Start the Server
@@ -510,9 +570,9 @@ npm run start
 npm run dev
 ```
 
-Server will start on `http://localhost:8080`
+Server will start on `http://localhost:8003`
 
-WebSocket available at `ws://localhost:8080`
+WebSocket available at `ws://localhost:8003`
 
 ### 3️⃣ Arduino Setup
 
@@ -538,32 +598,96 @@ ls /dev/tty.*
 # Check Device Manager → Ports (COM & LPT)
 ```
 
-### 4️⃣ Start Serial Bridges
+### 4️⃣ Start Data Source
 
-Open two terminal windows:
+#### Option A: Mock Sensors (Web Demo - No Hardware) 🌐
+
+Open two terminal windows for simulated sensors:
+
+**Terminal 1 (Upper Back Sensor Simulator):**
+```bash
+cd backend
+node mock-sensor.js --sensor 1 --scenario realistic
+```
+
+**Terminal 2 (Lower Back Sensor Simulator):**
+```bash
+cd backend
+node mock-sensor.js --sensor 2 --scenario realistic
+```
+
+**Available scenarios:**
+- `good` - Perfect posture
+- `bad` - Continuous slouching
+- `mixed` - Alternates between good/bad
+- `realistic` - Natural variation (default)
+- `gradual` - Slowly deteriorates
+
+You should see:
+```
+🤖 Mock Sensor Simulator v1.0
+📡 Starting sensor simulation: Natural posture with occasional slouching
+⏱️  Sending samples every 50ms...
+[12:34:56] 🟢 GOOD | Pitch: 8.2° | Samples: 100
+```
+
+#### Option B: Real Arduino Sensors (Hardware Setup) 🔧
+
+Open two terminal windows for real hardware:
 
 **Terminal 1 (Upper Back Sensor):**
 ```bash
 cd backend
-node serial-bridge.js /dev/tty.usbmodem1101 115200 localhost 8080 /imu
+node serial-bridge.js /dev/tty.usbmodem1101 115200 localhost 8003 /imu
 ```
 
 **Terminal 2 (Lower Back Sensor):**
 ```bash
 cd backend
-node serial-bridge.js /dev/tty.usbmodem101 115200 localhost 8080 /imu2
+node serial-bridge.js /dev/tty.usbmodem101 115200 localhost 8003 /imu2
 ```
 
 You should see:
 ```
 [Serial Bridge] Connected to /dev/tty.usbmodem1101 @ 115200
-[Serial Bridge] Forwarding to http://localhost:8080/imu
+[Serial Bridge] Forwarding to http://localhost:8003/imu
 [Serial Bridge] ✓ Posted sample (pitch=12.45)
 ```
 
-### 5️⃣ Frontend Setup (Swift App)
+### 5️⃣ Frontend Setup
 
-#### Open in Xcode
+#### Option A: Web Frontend (Browser - Works with Mock Sensors) 🌐
+
+Simply open in your browser:
+```bash
+# Open the HTML file directly
+open frontend/web/index.html
+
+# Or use a local server (better for WebSocket)
+cd frontend/web
+python3 -m http.server 5373
+# Then visit: http://localhost:5373
+```
+
+**What you should see:**
+- Connection status: "🟢 Connected"
+- Real-time pitch values updating
+- 3D torso model rotating
+- Back glow changing color (green/red)
+- Status: "GOOD ✓" or "BAD ✗"
+- AI insights every 15 seconds
+
+**Web Demo Features:**
+- ✅ Works on any device (desktop, tablet, phone)
+- ✅ No installation required
+- ✅ Three.js 3D visualization
+- ✅ Real-time WebSocket updates
+- ✅ Responsive design
+- ✅ Perfect for presentations!
+
+#### Option B: Swift App (macOS - For Real Hardware) 🔧
+
+##### Open in Xcode
 ```bash
 cd frontend/UpperTorso3D.swiftpm
 open UpperTorso3D.swiftpm
@@ -571,7 +695,7 @@ open UpperTorso3D.swiftpm
 
 Or double-click `UpperTorso3D.swiftpm` in Finder.
 
-#### Run the App
+##### Run the App
 1. Select target: **My Mac**
 2. Press **⌘R** or click ▶️ Run
 3. App will open and connect to WebSocket automatically
@@ -589,7 +713,15 @@ Or double-click `UpperTorso3D.swiftpm` in Finder.
 [Serial Bridge] ✓ Posted sample (pitch=12.45)
 ```
 
-#### Check Swift App
+#### Check Web App
+- Open `http://localhost:5373` in browser
+- Connection status should show "🟢 Connected"
+- Pitch values should update in real-time
+- 3D torso should rotate smoothly
+- Posture status should change (GOOD/BAD)
+- Insights should appear every 15 seconds
+
+#### Check Swift App (if using hardware)
 - Should show real-time pitch/roll values
 - 3D torso should rotate with sensor movement
 - Back glow should change color (green/red)
@@ -667,7 +799,7 @@ Ingest data from sensor 1 (upper back).
 
 **Sample Request:**
 ```bash
-curl -X POST http://localhost:8080/imu \
+curl -X POST http://localhost:8003/imu \
   -H "Content-Type: application/json" \
   -d '{
     "pitch": 12.45,
@@ -684,7 +816,7 @@ curl -X POST http://localhost:8080/imu \
 
 **Event Request:**
 ```bash
-curl -X POST http://localhost:8080/imu \
+curl -X POST http://localhost:8003/imu \
   -H "Content-Type: application/json" \
   -d '{"event": "calibration", "baseline_pitch": 10.5, "ts": 1234567890}'
 ```
@@ -756,7 +888,7 @@ Manually trigger Gemini analysis on recent data.
 
 **Request:**
 ```bash
-curl -X POST http://localhost:8080/gemini/analyze \
+curl -X POST http://localhost:8003/gemini/analyze \
   -H "Content-Type: application/json" \
   -d '{"window": 300, "source": "both"}'
 ```
@@ -779,7 +911,7 @@ Check Gemini API configuration.
 
 ### WebSocket Events
 
-Connect to: `ws://localhost:8080`
+Connect to: `ws://localhost:8003`
 
 #### Client → Server
 No client messages required. Server broadcasts automatically.
@@ -874,18 +1006,18 @@ node test-insights.js
 #### Manual API Testing
 ```bash
 # Post a sample
-curl -X POST http://localhost:8080/imu \
+curl -X POST http://localhost:8003/imu \
   -H "Content-Type: application/json" \
   -d '{"pitch":15.5,"ts":1234567890}'
 
 # Get latest
-curl http://localhost:8080/latest1
+curl http://localhost:8003/latest1
 
 # Get history
-curl http://localhost:8080/history1
+curl http://localhost:8003/history1
 
 # Check Gemini health
-curl http://localhost:8080/gemini/health
+curl http://localhost:8003/gemini/health
 ```
 
 ### Viewing Telemetry Logs
@@ -940,7 +1072,7 @@ cat backend/Gemini-Integration-Key.env
 #### Frontend Not Updating?
 - Check Xcode console for errors
 - Verify WebSocket URL in `TelemetryWebSocket.swift`
-- Ensure backend is running on port 8080
+- Ensure backend is running on port 8003
 - Check firewall settings
 
 ### Code Style

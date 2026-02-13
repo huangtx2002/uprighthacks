@@ -6,7 +6,7 @@
 const http = require("http");
 
 const HOST = "localhost";
-const PORT = 8080;
+const PORT = 8003;
 
 // Generate samples with varying pitch values to simulate different postures
 function generateSample(pitch, source = 1, offsetMs = 0) {

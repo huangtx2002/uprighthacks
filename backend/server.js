@@ -18,7 +18,7 @@ const { buildTelemetrySummary, runGemini, generateInsight } = require("./gemini"
 const { WindowManager } = require("./windowManager");
 const { computeWindowFeatures } = require("./featureExtraction");
 
-const PORT = Number(process.env.PORT || 8080);
+const PORT = Number(process.env.PORT || 8003);
 
 const app = express();
 app.use(cors());
@@ -537,10 +537,57 @@ app.post("/gemini/analyze", async (req, res) => {
     });
   } catch (err) {
     console.error("[/gemini/analyze] Error:", err);
-    res.status(500).json({
-      ok: false,
-      error: err?.message || "Unknown error",
-    });
+    
+    // If Gemini fails (quota exceeded, network error, etc.), return local fallback analysis
+    try {
+      const windowReq = toNum(req.body?.window) ?? ANALYSIS_DEFAULT_WINDOW;
+      const window = Math.max(20, Math.min(ANALYSIS_MAX_WINDOW, Math.floor(windowReq)));
+      const source = req.body?.source ?? "both";
+      const pickWindow = (arr) => arr.slice(Math.max(0, arr.length - window));
+      const s1 = pickWindow(history1).filter((x) => x.kind === "sample");
+      const s2 = pickWindow(history2).filter((x) => x.kind === "sample");
+      
+      let combinedSamples = [];
+      if (source === 1 || source === "1") combinedSamples = s1;
+      else if (source === 2 || source === "2") combinedSamples = s2;
+      else combinedSamples = [...s1, ...s2].sort((a, b) => (a.ts ?? 0) - (b.ts ?? 0));
+      
+      const pitches = combinedSamples.map((s) => s.pitch).filter((p) => typeof p === "number" && Number.isFinite(p));
+      const n = pitches.length;
+      const slouchCount = n ? pitches.filter((p) => p >= SLOUCH_DEG).length : 0;
+      const slouchPct = n ? (slouchCount / n) * 100 : 0;
+      
+      const fallbackResult = {
+        overall: slouchPct >= 60 ? "bad" : slouchPct >= 25 ? "okay" : "good",
+        key_findings: [
+          `Gemini API quota exceeded. Using local analysis.`,
+          n ? `Analyzed ${n} samples.` : "No samples available.",
+          n ? `Slouching ${slouchPct.toFixed(1)}% of the time.` : "",
+        ].filter(Boolean),
+        metrics: {
+          samples: n,
+          slouch_percent: Number(slouchPct.toFixed(1)),
+          slouch_threshold_deg: SLOUCH_DEG,
+        },
+        recommendations: [
+          "API quota resets daily. Try again later for AI-powered insights.",
+          "Monitor your posture using the real-time display.",
+        ],
+        confidence: "medium",
+      };
+      
+      return res.json({
+        ok: true,
+        gemini_used: false,
+        result: fallbackResult,
+        note: "Using local analysis due to: " + err.message,
+      });
+    } catch (fallbackError) {
+      return res.status(500).json({
+        ok: false,
+        error: err?.message || "Unknown error",
+      });
+    }
   }
 });
 
